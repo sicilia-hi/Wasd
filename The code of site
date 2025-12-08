@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой творческий уголок</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ffcc00;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card h2 i {
+            font-size: 1.5rem;
+        }
+        
+        .card p {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::after {
+            left: 100%;
+        }
+        
+        .interactive-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 30px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .color-box {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-box::after {
+            content: 'Нажми меня!';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .color-box:hover::after {
+            opacity: 1;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease;
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Тёмная тема */
+        body.dark-theme {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+        
+        body.dark-theme .card {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #ffcc00;
+        }
+        
+        /* Редактор */
+        .editor-container {
+            margin-top: 20px;
+        }
+        
+        .editor-tools {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .editor-tools .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        #textEditor {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #textEditor:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Галерея */
+        .gallery-container {
+            margin-top: 20px;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .gallery-item-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+        
+        .gallery-item-content {
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .gallery-item-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+        }
+        
+        .gallery-item-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(to right, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .empty-gallery {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <div class="container">
+        <header>
+            <h1>Мой творческий уголок</h1>
+            <p class="subtitle">Место, где идеи превращаются в реальность. Исследуйте, создавайте и вдохновляйтесь!</p>
+        </header>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h2><i class="fas fa-rocket"></i> О проекте</h2>
+                <p>Этот сайт начался с чистого листа и превратился в пространство для творчества и самовыражения. Здесь вы найдете вдохновение и инструменты для реализации ваших идей.</p>
+                <a href="#" class="btn" onclick="showMessage('Скоро здесь будет больше информации!')">Узнать больше</a>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-pen-fancy"></i> Творческий редактор</h2>
+                <p>Напишите эссе, рассказ, песню или стихотворение. Сохраните свои творения в галерее и возвращайтесь к ним в любое время!</p>
+                <button class="btn" onclick="openEditor()">
+                    <i class="fas fa-edit"></i> Начать творить
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-images"></i> Моя галерея</h2>
+                <p>Здесь ты можешь посмотреть всё что ты сделал в порыве творчества =)</p>
+                <button class="btn" onclick="openGallery()">
+                    <i class="fas fa-photo-video"></i> Открыть галерею
+                </button>
+            </div>
+        </div>
+        
+        <div class="interactive-section">
+            <h2><i class="fas fa-magic"></i> Интерактивная зона</h2>
+            <p>Поэкспериментируйте с элементами ниже:</p>
+            
+            <div class="color-box" id="colorBox" onclick="randomColor()"></div>
+            
+            <div class="controls">
+                <button class="btn" onclick="changeColor('linear-gradient(45deg, #ff9a9e, #fad0c4)')">
+                    <i class="fas fa-heart"></i> Розовый
+                </button>
+                <button class="btn" onclick="changeColor('linear-gradient(45deg, #a1c4fd, #c2e9fb)')">
+                    <i class="fas fa-tint"></i> Голубой
+                </button>
+                <button class="btn" onclick="changeColor('linear-gradient(45deg, #84fab0, #8fd3f4)')">
+                    <i class="fas fa-leaf"></i> Зеленый
+                </button>
+                <button class="btn" onclick="changeColor('linear-gradient(45deg, #ffecd2, #fcb69f)')">
+                    <i class="fas fa-sun"></i> Оранжевый
+                </button>
+                <button class="btn" onclick="randomColor()">
+                    <i class="fas fa-random"></i> Случайный
+                </button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="pulseAnimation()">
+                    <i class="fas fa-play"></i> Запустить анимацию
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Создано с <i class="fas fa-heart" style="color: #ff4757;"></i> и вдохновением | © 2023 Мой творческий уголок</p>
+            <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9rem;">
+                <i class="fas fa-code"></i> Сделано с помощью HTML, CSS и JavaScript
+            </p>
+        </footer>
+    </div>
+    
+    <!-- Модальное окно редактора -->
+    <div id="editorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditor()">&times;</span>
+            <h2><i class="fas fa-edit"></i> Творческий редактор</h2>
+            <p>Напишите здесь свои мысли, идеи, рассказы, стихи или песни...</p>
+            
+            <div class="editor-container">
+                <div class="editor-tools">
+                    <button class="btn" onclick="formatText('bold')">
+                        <i class="fas fa-bold"></i> Жирный
+                    </button>
+                    <button class="btn" onclick="formatText('italic')">
+                        <i class="fas fa-italic"></i> Курсив
+                    </button>
+                    <button class="btn" onclick="formatText('underline')">
+                        <i class="fas fa-underline"></i> Подчерк.
+                    </button>
+                    <button class="btn" onclick="clearEditor()">
+                        <i class="fas fa-eraser"></i> Очистить
+                    </button>
+                </div>
+                
+                <textarea id="textEditor" placeholder="Начните писать здесь..."></textarea>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn" onclick="saveWork()" style="background: linear-gradient(to right, #2ecc71, #27ae60);">
+                        <i class="fas fa-save"></i> Сохранить в галерею
+                    </button>
+                    <button class="btn" onclick="downloadWork()" style="background: linear-gradient(to right, #3498db, #2980b9);">
+                        <i class="fas fa-download"></i> Скачать
+                    </button>
+                    <button class="btn" onclick="closeEditor()" style="background: linear-gradient(to right, #e74c3c, #c0392b);">
+                        <i class="fas fa-times"></i> Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно галереи -->
+    <div id="galleryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeGallery()">&times;</span>
+            <h2><i class="fas fa-images"></i> Моя галерея творчества</h2>
+            <p>Здесь ты можешь посмотреть всё что ты сделал в порыве творчества =)</p>
+            
+            <div class="gallery-container">
+                <div id="galleryGrid" class="gallery-grid">
+                    <!-- Здесь будут отображаться сохраненные работы -->
+                </div>
+                
+                <div id="emptyGallery" class="empty-gallery">
+                    <i class="fas fa-paint-brush" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                    <h3>Галерея пуста</h3>
+                    <p>Начните творить в редакторе, чтобы сохранить свои первые работы здесь!</p>
+                    <button class="btn" onclick="closeGallery(); openEditor();" style="margin-top: 20px;">
+                        <i class="fas fa-edit"></i> Перейти в редактор
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Функции для цветового блока
+        function changeColor(gradient) {
+            const box = document.getElementById('colorBox');
+            box.style.background = gradient;
+            box.style.animation = 'pulse 0.5s ease';
+            setTimeout(() => {
+                box.style.animation = '';
+            }, 500);
+        }
+        
+        function randomColor() {
+            const colors = [
+                'linear-gradient(45deg, #ff9a9e, #fad0c4)',
+                'linear-gradient(45deg, #a1c4fd, #c2e9fb)',
+                'linear-gradient(45deg, #84fab0, #8fd3f4)',
+                'linear-gradient(45deg, #ffecd2, #fcb69f)',
+                'linear-gradient(45deg, #d4fc79, #96e6a1)',
+                'linear-gradient(45deg, #a6c0fe, #f68084)',
+                'linear-gradient(45deg, #fad0c4, #ffd1ff)',
+                'linear-gradient(45deg, #667eea, #764ba2)',
+                'linear-gradient(45deg, #f093fb, #f5576c)',
+                'linear-gradient(45deg, #4facfe, #00f2fe)'
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            changeColor(colors[randomIndex]);
+        }
+        
+        // Анимация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('active');
+                }, index * 200);
+            });
+            
+            // Переключение темы
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    icon.className = 'fas fa-sun';
+                    themeToggle.title = 'Включить светлую тему';
+                } else {
+                    icon.className = 'fas fa-moon';
+                    themeToggle.title = 'Включить темную тему';
+                }
+            });
+            
+            // Загрузка сохраненных работ из localStorage
+            loadGallery();
+        });
+        
+        // Функция для показа сообщений
+        function showMessage(text) {
+            alert(text);
+        }
+        
+        // Функция для пульсации элементов
+        function pulseAnimation() {
+            const elements = document.querySelectorAll('.card, .color-box');
+            elements.forEach(el => {
+                el.style.animation = 'pulse 1s ease';
+                setTimeout(() => {
+                    el.style.animation = '';
+                }, 1000);
+            });
+        }
+        
+        // Редактор текста
+        function openEditor() {
+            document.getElementById('editorModal').style.display = 'block';
+            document.getElementById('textEditor').focus();
+        }
+        
+        function closeEditor() {
+            document.getElementById('editorModal').style.display = 'none';
+        }
+        
+        function formatText(command) {
+            const editor = document.getElementById('textEditor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const selectedText = editor.value.substring(start, end);
+            
+            let formattedText = '';
+            switch(command) {
+                case 'bold':
+                    formattedText = `<strong>${selectedText}</strong>`;
+                    break;
+                case 'italic':
+                    formattedText = `<em>${selectedText}</em>`;
+                    break;
+                case 'underline':
+                    formattedText = `<u>${selectedText}</u>`;
+                    break;
+            }
+            
+            editor.value = editor.value.substring(0, start) + formattedText + editor.value.substring(end);
+            editor.focus();
+            editor.setSelectionRange(start + formattedText.length, start + formattedText.length);
+        }
+        
+        function clearEditor() {
+            if (confirm('Очистить редактор? Все несохраненные изменения будут потеряны.')) {
+                document.getElementById('textEditor').value = '';
+            }
+        }
+        
+        function saveWork() {
+            const content = document.getElementById('textEditor').value.trim();
+            
+            if (!content) {
+                alert('Пожалуйста, напишите что-нибудь перед сохранением!');
+                return;
+            }
+            
+            // Получаем сохраненные работы из localStorage
+            let works = JSON.parse(localStorage.getItem('creativeWorks') || '[]');
+            
+            // Создаем новую работу
+            const newWork = {
+                id: Date.now(),
+                title: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
+                content: content,
+                date: new Date().toLocaleString('ru-RU'),
+                type: determineWorkType(content)
+            };
+            
+            // Добавляем работу в массив
+            works.unshift(newWork);
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('creativeWorks', JSON.stringify(works));
+            
+            // Обновляем галерею
+            loadGallery();
+            
+            // Закрываем редактор и показываем сообщение
+            closeEditor();
+            document.getElementById('textEditor').value = '';
+            showMessage('Ваша работа сохранена в галерее!');
+        }
+        
+        function determineWorkType(content) {
+            const text = content.toLowerCase();
+            
+            if (text.includes('куплет') || text.includes('припев') || text.includes('гитар') || text.match(/\n\n/g)?.length > 3) {
+                return 'Песня';
+            } else if (text.split('.').length > 5 && text.length > 500) {
+                return 'Эссе';
+            } else if (text.split('\n').length > 3 && text.match(/[.!?]/g)?.length > 3) {
+                return 'Рассказ';
+            } else if (text.split('\n').length > 2 && text.length < 300) {
+                return 'Стихотворение';
+            } else {
+                return 'Запись';
+            }
+        }
+        
+        function downloadWork() {
+            const content = document.getElementById('textEditor').value;
+            
+            if (!content) {
+                alert('Нет текста для скачивания!');
+                return;
+            }
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `моя_работа_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Галерея
+        function openGallery() {
+            document.getElementById('galleryModal').style.display = 'block';
+            loadGallery();
+        }
+        
+        function closeGallery() {
+            document.getElementById('galleryModal').style.display = 'none';
+        }
+        
+        function loadGallery() {
+            const works = JSON.parse(localStorage.getItem('creativeWorks') || '[]');
+            const galleryGrid = document.getElementById('galleryGrid');
+            const emptyGallery = document.getElementById('emptyGallery');
+            
+            galleryGrid.innerHTML = '';
+            
+            if (works.length === 0) {
+                emptyGallery.style.display = 'block';
+                return;
+            }
+            
+            emptyGallery.style.display = 'none';
+            
+            works.forEach(work => {
+                const workElement = document.createElement('div');
+                workElement.className = 'gallery-item';
+                workElement.innerHTML = `
+                    <div class="gallery-item-title">
+                        <i class="fas fa-${getIconByType(work.type)}"></i> ${work.title}
+                    </div>
+                    <div class="gallery-item-content">
+                        ${work.content.substring(0, 200)}${work.content.length > 200 ? '...' : ''}
+                    </div>
+                    <div class="gallery-item-date">${work.date} • ${work.type}</div>
+                    <button class="delete-btn" onclick="deleteWork(${work.id})">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
+                `;
+                galleryGrid.appendChild(workElement);
+            });
+        }
+        
+        function getIconByType(type) {
+            switch(type) {
+                case 'Песня': return 'music';
+                case 'Эссе': return 'file-alt';
+                case 'Рассказ': return 'book';
+                case 'Стихотворение': return 'feather-alt';
+                default: return 'edit';
+            }
+        }
+        
+        function deleteWork(id) {
+            if (!confirm('Удалить эту работу? Это действие нельзя отменить.')) {
+                return;
+            }
+            
+            let works = JSON.parse(localStorage.getItem('creativeWorks') || '[]');
+            works = works.filter(work => work.id !== id);
+            localStorage.setItem('creativeWorks', JSON.stringify(works));
+            loadGallery();
+        }
+        
+        // Плавный скролл для ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Закрытие модальных окон при клике вне их
+        window.addEventListener('click', function(event) {
+            const editorModal = document.getElementById('editorModal');
+            const galleryModal = document.getElementById('galleryModal');
+            
+            if (event.target === editorModal) {
+                closeEditor();
+            }
+            
+            if (event.target === galleryModal) {
+                closeGallery();
+            }
+        });
+    </script>
+</body>
+</html>
